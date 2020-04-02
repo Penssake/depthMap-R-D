@@ -4,27 +4,34 @@
 
 <script>
 import * as THREE from "three";
+import FBXLoader from "three-fbx-loader";
+
+import model from "@/assets/models/CartoonPlanets.FBX";
 
 export default {
   name: "Canvas",
   props: {
     msg: String
   },
-  mounted() {    
+  mounted() {
     const canvas = document.getElementById("canvas");
     const scene = new THREE.Scene();
-    const renderer = new THREE.WebGLRenderer({canvas});
-    // TODO
-    // let mouseX = 0;
-    // let mouseY = 0;
+    const renderer = new THREE.WebGLRenderer({ canvas });
 
-    const color = 0xFFFFFF;
+    const color = 0xffffff;
     const intensity = 1;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(-1, 2, 4);
     scene.add(light);
 
-    console.log(scene, renderer, canvas)
+    // model
+    const loader = new FBXLoader();
+    loader.load(model, function(object3D) {
+      console.log("3d model", object3D);
+      // scene.add(object3D);
+    });
+
+    console.log(renderer);
   }
 };
 </script>
