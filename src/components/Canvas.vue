@@ -4,8 +4,8 @@
 
 <script>
 import * as THREE from "three";
-import model from "@/assets/models/cartoonPlanets.obj";
-import { ObjectLoader } from 'three';
+// import model from "@/assets/models/cartoonPlanets.obj";
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 
 export default {
   name: "Canvas",
@@ -24,9 +24,10 @@ export default {
     scene.add(light);
 
     // model
-    ObjectLoader.load(model, function(object3D) {
+    const loader = new OBJLoader();
+    loader.load('/assets/models/cartoonPlanets.obj', function(object3D) {
       console.log("3d model", object3D);
-      // scene.add(object3D);
+      scene.add(object3D);
     });
 
     console.log(renderer);
