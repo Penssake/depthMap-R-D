@@ -1,11 +1,11 @@
 <template>
-  <div></div>
+  <div id="canvas" class="canvasContainer"></div>
 </template>
 
 <script>
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import model from "@/assets/models/cartoonPlanets.obj";
+// import model from "@/assets/models/cartoonPlanets.obj";
 
 export default {
   name: "Canvas",
@@ -13,7 +13,7 @@ export default {
     msg: String
   },
   mounted() {
-    // const canvas = document.getElementById("canvas");
+    const canvas = document.getElementById("canvas");
     const scene = new THREE.Scene();
     // this camera is most similar to human eye / realism perspective
     const camera = new THREE.PerspectiveCamera(
@@ -23,26 +23,35 @@ export default {
       window.innerWidth / window.innerHeight,
       // near plane
       1,
-      // far plane
-      1000
+      // far plane -- depends on how large model is -- then positionzed and x || y position of object
+      10000
     );
+    // large model -- need to reposition camara zed
+    camera.position.z = 4000;
     // most complex renderer
     // antialias smooths out result of render
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setClearColor('#32cd32');
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    // const color = 0xffffff;
-    // const intensity = 1;
-    // const light = new THREE.DirectionalLight(color, intensity);
-    // light.position.set(-1, 2, 4);
-    // scene.add(light);
+    canvas.appendChild(renderer.domElement);
+
+    window.addEventListener('resize', () => {
+      // to make renderer responsive
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      // reset the cameras aspect ratio
+      camera.aspect = window.innerWidth / window.innerHeight;
+      // needed for every update -- update matrix
+      camera.updateProjectionMatrix();
+    })
+    // come back to lighting
 
     // model
     const loader = new OBJLoader();
-    loader.load(model, function(object3D) {
+    loader.setPath('./assets/models/')
+    loader.load('cartoonPlanets.obj', function(object3D) {
       console.log("3d model", object3D);
       scene.add(object3D);
+      object3D.position.x -= 4000;
       renderer.render(scene, camera);
     });
     console.log(renderer);
@@ -53,5 +62,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-
+// remove scroll bars?? not working
+html, body {
+  margin: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  -webkit-box-sizing:border-box; 
+}
+.canvasContainer canvas {
+  display: block;
+}
 </style>
