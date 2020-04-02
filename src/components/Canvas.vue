@@ -26,29 +26,61 @@ export default {
       // far plane -- depends on how large model is -- then positionzed and x || y position of object
       10000
     );
-    // large model -- need to reposition camara zed
-    camera.position.z = 4000;
+
+    // camera helper for devlopment
+    let cameraHelper = new THREE.CameraHelper(camera)
+    scene.add(cameraHelper);
+    // large model -- need to reposition camera zed
+    camera.position.z = 5000;
     // most complex renderer
     // antialias smooths out result of render
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor('#32cd32');
+    renderer.setClearColor("#32cd32");
     renderer.setSize(window.innerWidth, window.innerHeight);
     canvas.appendChild(renderer.domElement);
 
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       // to make renderer responsive
       renderer.setSize(window.innerWidth, window.innerHeight);
       // reset the cameras aspect ratio
       camera.aspect = window.innerWidth / window.innerHeight;
       // needed for every update -- update matrix
       camera.updateProjectionMatrix();
-    })
-    // come back to lighting
+    });
+
+    // lighting
+
+    // ambient light, shaped will be flat
+    // let light = new THREE.AmbientLight(0xffffff, 0.5);
+
+    // pointed light, light from a point, shapes shown
+    // let light = new THREE.HemisphereLight(0xffffff, 0x0808dd, 1)
+
+    // scene.add(light)
+
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(0, 4000, 300);
+
+    spotLight.castShadow = true;
+
+    spotLight.shadow.mapSize.width = window.innerWidth;
+    spotLight.shadow.mapSize.height = window.innerHeight;
+
+    // spotLight.shadow.camera.near = 500;
+    // spotLight.shadow.camera.far = 4000;
+    // spotLight.shadow.camera.fov = 30;
+    // can have a bottom/top/side mesh to recieve shadow as well as cast shadow from 3D object
+
+
+    scene.add(spotLight);
 
     // model
     const loader = new OBJLoader();
-    loader.setPath('./assets/models/')
-    loader.load('cartoonPlanets.obj', function(object3D) {
+    loader.setPath("./assets/models/");
+    loader.load("cartoonPlanets.obj", function(object3D) {
       console.log("3d model", object3D);
       scene.add(object3D);
       object3D.position.x -= 4000;
@@ -63,11 +95,12 @@ export default {
 </script>
 <style lang="scss" scoped>
 // remove scroll bars?? not working
-html, body {
+html,
+body {
   margin: 0;
   height: 100vh;
   box-sizing: border-box;
-  -webkit-box-sizing:border-box; 
+  -webkit-box-sizing: border-box;
 }
 .canvasContainer canvas {
   display: block;
