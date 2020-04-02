@@ -4,9 +4,8 @@
 
 <script>
 import * as THREE from "three";
-import FBXLoader from "three-fbx-loader";
-
-import model from "@/assets/models/CartoonPlanets.FBX";
+import model from "@/assets/models/cartoonPlanets.obj";
+import { ObjectLoader } from 'three';
 
 export default {
   name: "Canvas",
@@ -25,8 +24,7 @@ export default {
     scene.add(light);
 
     // model
-    const loader = new FBXLoader();
-    loader.load(model, function(object3D) {
+    ObjectLoader.load(model, function(object3D) {
       console.log("3d model", object3D);
       // scene.add(object3D);
     });
