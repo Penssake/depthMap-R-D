@@ -9,11 +9,15 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
+    "css-loader": "^3.4.2",
     "node-sass": "^4.13.1",
+    "postcss-loader": "^3.0.0",
+    "reset-css": "^5.0.1",
     "sass-loader": "^8.0.2",
     "three": "^0.115.0",
     "three-fbx-loader": "^1.0.3",
     "vue": "^2.6.11",
+    "vue-loader": "^15.9.1",
     "webpack-obj-loader": "^1.0.4"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@
 <script>
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 // import model from "@/assets/models/cartoonPlanets.obj";
 
 export default {
@@ -23,13 +24,14 @@ export default {
       window.innerWidth / window.innerHeight,
       // near plane
       1,
-      // far plane -- depends on how large model is -- then positionzed and x || y position of object
+      // far plane -- depends on how large model is -- then position zed and x || y position of object
       10000
     );
 
     // camera helper for devlopment
-    let cameraHelper = new THREE.CameraHelper(camera)
+    let cameraHelper = new THREE.CameraHelper(camera);
     scene.add(cameraHelper);
+
     // large model -- need to reposition camera zed
     camera.position.z = 5000;
     // most complex renderer
@@ -38,6 +40,12 @@ export default {
     renderer.setClearColor("#32cd32");
     renderer.setSize(window.innerWidth, window.innerHeight);
     canvas.appendChild(renderer.domElement);
+
+    // enable orbit control
+    let controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.campingFactor = 0.25;
+    controls.enableZoom = true;
 
     window.addEventListener("resize", () => {
       // to make renderer responsive
@@ -74,7 +82,6 @@ export default {
     // spotLight.shadow.camera.fov = 30;
     // can have a bottom/top/side mesh to recieve shadow as well as cast shadow from 3D object
 
-
     scene.add(spotLight);
 
     // model
@@ -94,14 +101,6 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-// remove scroll bars?? not working
-html,
-body {
-  margin: 0;
-  height: 100vh;
-  box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-}
 .canvasContainer canvas {
   display: block;
 }
