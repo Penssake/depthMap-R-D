@@ -32,7 +32,7 @@ export default {
     flex: 1;
   }
   .canvas-block {
-    background-color: green;
+    background-color: #5acc7b;
     height: 100%;
     width: 50%;
   }
