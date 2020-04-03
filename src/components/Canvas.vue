@@ -10,9 +10,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export default {
   name: "Canvas",
-  props: {
-    msg: String
-  },
   mounted() {
     const canvas = document.getElementById("canvas");
     const scene = new THREE.Scene();
@@ -21,7 +18,7 @@ export default {
       // field of view
       75,
       // aspect ration -- I want the browser
-      window.innerWidth / window.innerHeight,
+      window.innerWidth / 2 / (window.innerHeight / 1.5),
       // near plane
       1,
       // far plane -- depends on how large model is -- then position zed and x || y position of object
@@ -38,7 +35,7 @@ export default {
     // antialias smooths out result of render
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setClearColor("#32cd32");
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.5);
     canvas.appendChild(renderer.domElement);
 
     // enable orbit control
@@ -49,9 +46,9 @@ export default {
 
     window.addEventListener("resize", () => {
       // to make renderer responsive
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.5);
       // reset the cameras aspect ratio
-      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = window.innerWidth / 2 / (window.innerHeight / 1.5);
       // needed for every update -- update matrix
       camera.updateProjectionMatrix();
     });
@@ -74,8 +71,8 @@ export default {
 
     spotLight.castShadow = true;
 
-    spotLight.shadow.mapSize.width = window.innerWidth;
-    spotLight.shadow.mapSize.height = window.innerHeight;
+    spotLight.shadow.mapSize.width = window.innerWidth / 2;
+    spotLight.shadow.mapSize.height = window.innerHeight / 1.5;
 
     // spotLight.shadow.camera.near = 500;
     // spotLight.shadow.camera.far = 4000;
@@ -101,6 +98,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+// remove scroll bars?? not working
+html,
+body {
+  margin: 0;
+  height: 100vh;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
 .canvasContainer canvas {
   display: block;
 }

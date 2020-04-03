@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Header from "./components/Header.vue";
+import Header from "@/components/Header.vue";
 
 export default {
   name: "App",
@@ -17,6 +17,7 @@ export default {
 
 <style>
 @import "./reset.css";
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 #app {
   -webkit-font-smoothing: antialiased;
@@ -28,5 +29,6 @@ export default {
   margin: 0;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
 }
 </style>
