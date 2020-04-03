@@ -1,10 +1,15 @@
 <template>
-  <div id="canvasTwo" class="canvasContainer"></div>
+  <div
+    id="canvasTwo"
+    class="canvasContainer"
+    @mouseenter="handleMouse(true)"
+    @mouseleave="handleMouse(false)"
+  ></div>
 </template>
 
 <script>
 import * as THREE from "three";
-// import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
+import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 
 export default {
   name: "PointerDrivenControls",
@@ -25,7 +30,6 @@ export default {
     this.createScene();
     this.createCamera();
     this.createRenderer();
-    // this.createControls();
     this.createLighting();
 
     window.addEventListener("resize", () => {
@@ -61,7 +65,7 @@ export default {
     },
     createCamera() {
       const camera = new THREE.PerspectiveCamera(75, 1, 1, 1000);
-
+      console.log(camera.position.x, camera.position.y);
       camera.position.z = 200;
       this.camera = camera;
     },
@@ -82,6 +86,21 @@ export default {
       this.scene.add(lightTwo);
       this.lightingTwo = lightTwo;
     },
+    handleMouse(val) {
+      if (val === true) {
+        this.canvas.addEventListener("mousemove", () => {
+          this.controls = new PointerLockControls(this.camera, this.canvas);
+          let xPos = event.clientX - window.innerWidth / 2;
+          let yPos = event.clientY - window.innerHeight / 1.43;
+          this.camera.position.y = yPos;
+          this.camera.position.x = xPos;
+        });
+      } else {
+        this.camera.position.y = 0;
+        this.camera.position.x = 0;
+        this.camera.position.z = 200;
+      }
+    },
     animate() {
       requestAnimationFrame(this.animate);
       // controls.update();
@@ -93,5 +112,6 @@ export default {
 <style lang="scss" scoped>
 .canvasContainer canvas {
   display: block;
+  cursor: pointer;
 }
 </style>
