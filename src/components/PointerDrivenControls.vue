@@ -47,7 +47,7 @@ export default {
 
       const geometry = new THREE.BoxGeometry(40, 40, 40);
       const colorPicker = ["#8AFFAB", "#5acc7b", "#646DFF"];
-      for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 300; i++) {
         let chosenIndex = Math.floor(Math.random() * colorPicker.length);
         let chosenColor = colorPicker[chosenIndex];
 
@@ -56,16 +56,15 @@ export default {
         });
 
         let currentCube = new THREE.Mesh(geometry, material);
-        currentCube.position.x = Math.floor(Math.random() * 1000 - 500);
-        currentCube.position.y = Math.floor(Math.random() * 1000 - 500);
-        currentCube.position.z = Math.floor(Math.random() * 500 - 500);
+        currentCube.position.x = Math.floor(Math.random() * 2000 - 500);
+        currentCube.position.y = Math.floor(Math.random() * 2000 - 500);
+        currentCube.position.z = Math.floor(Math.random() * 1000 - 500);
         scene.add(currentCube);
       }
       this.scene = scene;
     },
     createCamera() {
       const camera = new THREE.PerspectiveCamera(75, 1, 1, 1000);
-      console.log(camera.position.x, camera.position.y);
       camera.position.z = 200;
       this.camera = camera;
     },
@@ -96,6 +95,7 @@ export default {
           this.camera.position.x = xPos;
         });
       } else {
+        this.canvas.removeEventListener("mousemove", () => {});
         this.camera.position.y = 0;
         this.camera.position.x = 0;
         this.camera.position.z = 200;
@@ -103,7 +103,6 @@ export default {
     },
     animate() {
       requestAnimationFrame(this.animate);
-      // controls.update();
       this.renderer.render(this.scene, this.camera);
     }
   }
