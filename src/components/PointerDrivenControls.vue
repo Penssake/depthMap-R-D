@@ -45,18 +45,7 @@ export default {
       const material = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#5acc7b")
       });
-
-      // let currentCubeMeshX = 0.3;
-      // let currentCubeMeshY = 0.3;
-      // for (let i = 0; i < 10; i++) {
-      // let currentCubeMesh = new THREE.Mesh(geometry, material);
-      // currentCubeMesh.translateY(currentCubeMeshY);
-      // currentCubeMesh.translateX(currentCubeMeshX);
-      // scene.add(currentCubeMesh);
-      // currentCubeMeshX = currentCubeMeshX += Math.random() * 2;
-      // currentCubeMeshY = currentCubeMeshY += Math.random() * 2;
-      // }
-      for (var i = 0; i < 30; i++) {
+      for (var i = 0; i < 100; i++) {
         let currentCube = new THREE.Mesh(geometry, material);
         currentCube.position.x = Math.random() * 1000 - 500;
         currentCube.position.y = Math.random() * 1000 - 500;
