@@ -90,7 +90,8 @@ export default {
       let currentZ = this.camera.position.z;
       if (val === true) {
         this.controls = new PointerLockControls(this.camera, this.canvas);
-
+        this.controls.enableDamping = true;
+        this.controls.autoRotate = true;
         this.canvas.addEventListener("mousemove", () => {
           let x = event.clientX - window.innerWidth / 2;
           let y = event.clientY - window.innerHeight / 1.43;
@@ -100,10 +101,11 @@ export default {
             globalY = y;
           }
           if (y < globalY) {
-            this.camera.position.z = currentZ - (globalY - y);
+            this.camera.position.z = currentZ + (globalY - y);
           } else {
             this.camera.position.z = currentZ - (globalY + y);
           }
+          globalY = y;
         });
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
@@ -117,6 +119,9 @@ export default {
     animate() {
       requestAnimationFrame(this.animate);
       this.renderer.render(this.scene, this.camera);
+      if (this.controls) {
+        this.controls.update;
+      }
     }
   }
 };
