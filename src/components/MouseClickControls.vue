@@ -71,7 +71,7 @@ export default {
     },
     createControls() {
       // enable orbit control
-      let controls = new OrbitControls(this.camera, this.renderer.domElement);
+      const controls = new OrbitControls(this.camera, this.renderer.domElement);
       controls.enableDamping = true;
       controls.campingFactor = 0.25;
       controls.enableZoom = true;
@@ -82,7 +82,7 @@ export default {
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-      var spotLight = new THREE.SpotLight(0xffffff);
+      const spotLight = new THREE.SpotLight(0xffffff);
       spotLight.position.set(0, 4000, 300);
 
       spotLight.castShadow = true;
