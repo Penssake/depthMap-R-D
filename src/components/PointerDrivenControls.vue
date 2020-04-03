@@ -15,7 +15,8 @@ export default {
       camera: null,
       renderer: null,
       controls: null,
-      lighting: null
+      lightingOne: null,
+      lightingTwo: null
     };
   },
   mounted() {
@@ -38,34 +39,36 @@ export default {
   methods: {
     createScene() {
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0xaaaaaa);
+      scene.background = new THREE.Color(0x000);
 
-      const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+      const geometry = new THREE.BoxGeometry(40, 40, 40);
       const material = new THREE.MeshStandardMaterial({
         color: new THREE.Color("#5acc7b")
       });
 
-      let boxMeshX = 0.3;
-      let boxMeshY = 0.3;
-      for (let i = 0; i < 10; i++) {
-        let boxMesh = new THREE.Mesh(geometry, material);
-        boxMesh.translateY(boxMeshY);
-        boxMesh.translateX(boxMeshX);
-        scene.add(boxMesh);
-        boxMeshX = boxMeshX += Math.random() * 2;
-        boxMeshY = boxMeshY += Math.random() * 2;
+      // let currentCubeMeshX = 0.3;
+      // let currentCubeMeshY = 0.3;
+      // for (let i = 0; i < 10; i++) {
+      // let currentCubeMesh = new THREE.Mesh(geometry, material);
+      // currentCubeMesh.translateY(currentCubeMeshY);
+      // currentCubeMesh.translateX(currentCubeMeshX);
+      // scene.add(currentCubeMesh);
+      // currentCubeMeshX = currentCubeMeshX += Math.random() * 2;
+      // currentCubeMeshY = currentCubeMeshY += Math.random() * 2;
+      // }
+      for (var i = 0; i < 30; i++) {
+        let currentCube = new THREE.Mesh(geometry, material);
+        currentCube.position.x = Math.random() * 1000 - 500;
+        currentCube.position.y = Math.random() * 1000 - 500;
+        currentCube.position.z = Math.random() * 500 - 500;
+        scene.add(currentCube);
       }
       this.scene = scene;
     },
     createCamera() {
-      const camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / 2 / (window.innerHeight / 1.43),
-        0.1,
-        1000
-      );
+      const camera = new THREE.PerspectiveCamera(75, 1, 1, 1000);
 
-      camera.position.z = 2;
+      camera.position.z = 200;
       this.camera = camera;
     },
     createRenderer() {
@@ -75,10 +78,15 @@ export default {
       this.renderer = renderer;
     },
     createLighting() {
-      const light = new THREE.DirectionalLight();
-      light.position.set(0, 1, 2);
-      this.scene.add(light);
-      this.lighting = light;
+      const lightOne = new THREE.PointLight();
+      lightOne.position.set(450, 200, 200);
+      this.scene.add(lightOne);
+      this.lightingOne = lightOne;
+
+      const lightTwo = new THREE.PointLight();
+      lightTwo.position.set(450, 200, 200);
+      this.scene.add(lightTwo);
+      this.lightingTwo = lightTwo;
     },
     animate() {
       requestAnimationFrame(this.animate);
