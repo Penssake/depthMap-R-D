@@ -1,16 +1,19 @@
 <template>
   <div id="app" class="app">
-    <Header />
+    <SectionOne />
+    <SectionTwo />
   </div>
 </template>
 
 <script>
-import Header from "@/components/Header.vue";
+import SectionOne from "@/components/SectionOne.vue";
+import SectionTwo from "@/components/SectionTwo.vue";
 
 export default {
   name: "App",
   components: {
-    Header
+    SectionOne,
+    SectionTwo
   }
 };
 </script>

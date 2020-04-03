@@ -8,7 +8,7 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export default {
-  name: "Canvas",
+  name: "MouseClickControls",
   mounted() {
     const canvas = document.getElementById("canvas");
     const scene = new THREE.Scene();
@@ -17,21 +17,18 @@ export default {
       // field of view
       75,
       // aspect ration -- I want the browser
-      window.innerWidth / 2 / (window.innerHeight / 1.5),
+      window.innerWidth / 2 / (window.innerHeight / 1.43),
       // near plane
       1,
       // far plane -- depends on how large model is -- then position zed and x || y position of object
       500
     );
-    // camera helper for devlopment
-    let cameraHelper = new THREE.CameraHelper(camera);
-    scene.add(cameraHelper);
-    // large model -- need to reposition camera zed
+
     camera.position.z = 10;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setClearColor("#5ACC7B");
-    renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.5);
+    renderer.setClearColor("#fff");
+    renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.43);
     canvas.appendChild(renderer.domElement);
 
     // enable orbit control
@@ -50,7 +47,7 @@ export default {
     spotLight.castShadow = true;
 
     spotLight.shadow.mapSize.width = window.innerWidth / 2;
-    spotLight.shadow.mapSize.height = window.innerHeight / 1.5;
+    spotLight.shadow.mapSize.height = window.innerHeight / 1.43;
     scene.add(spotLight);
 
     // model
@@ -59,6 +56,7 @@ export default {
     loader.setPath("./assets/models/");
     loader.load("model.obj", function(object3D) {
       globalObj = object3D;
+      globalObj.translateY(-2.5);
       scene.add(globalObj);
       renderer.render(scene, camera);
     });
@@ -67,9 +65,9 @@ export default {
 
     window.addEventListener("resize", () => {
       // to make renderer responsive
-      renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.5);
+      renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.43);
       // reset the cameras aspect ratio
-      camera.aspect = window.innerWidth / 2 / (window.innerHeight / 1.5);
+      camera.aspect = window.innerWidth / 2 / (window.innerHeight / 1.43);
       // needed for every update -- update matrix
       camera.updateProjectionMatrix();
     });
