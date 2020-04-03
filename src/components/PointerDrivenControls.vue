@@ -42,14 +42,19 @@ export default {
       scene.background = new THREE.Color(0x000);
 
       const geometry = new THREE.BoxGeometry(40, 40, 40);
-      const material = new THREE.MeshStandardMaterial({
-        color: new THREE.Color("#5acc7b")
-      });
+      const colorPicker = ["#8AFFAB", "#5acc7b", "#646DFF"];
       for (var i = 0; i < 100; i++) {
+        let chosenIndex = Math.floor(Math.random() * colorPicker.length);
+        let chosenColor = colorPicker[chosenIndex];
+
+        const material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(chosenColor)
+        });
+
         let currentCube = new THREE.Mesh(geometry, material);
-        currentCube.position.x = Math.random() * 1000 - 500;
-        currentCube.position.y = Math.random() * 1000 - 500;
-        currentCube.position.z = Math.random() * 500 - 500;
+        currentCube.position.x = Math.floor(Math.random() * 1000 - 500);
+        currentCube.position.y = Math.floor(Math.random() * 1000 - 500);
+        currentCube.position.z = Math.floor(Math.random() * 500 - 500);
         scene.add(currentCube);
       }
       this.scene = scene;
