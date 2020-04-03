@@ -86,16 +86,29 @@ export default {
       this.lightingTwo = lightTwo;
     },
     handleMouse(val) {
+      let globalY = 0;
+      let currentZ = this.camera.position.z;
       if (val === true) {
+        this.controls = new PointerLockControls(this.camera, this.canvas);
+
         this.canvas.addEventListener("mousemove", () => {
-          this.controls = new PointerLockControls(this.camera, this.canvas);
-          let xPos = event.clientX - window.innerWidth / 2;
-          let yPos = event.clientY - window.innerHeight / 1.43;
-          this.camera.position.y = yPos;
-          this.camera.position.x = xPos;
+          let x = event.clientX - window.innerWidth / 2;
+          let y = event.clientY - window.innerHeight / 1.43;
+          this.camera.position.y = y;
+          this.camera.position.x = x;
+          if (globalY === 0) {
+            globalY = y;
+          }
+          if (y < globalY) {
+            this.camera.position.z = currentZ - (globalY - y);
+          } else {
+            this.camera.position.z = currentZ - (globalY + y);
+          }
         });
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
+        this.canvas.removeEventListener("scroll", () => {});
+
         this.camera.position.y = 0;
         this.camera.position.x = 0;
         this.camera.position.z = 200;
