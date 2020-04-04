@@ -1,19 +1,17 @@
 <template>
   <div id="app" class="app">
-    <SectionOne />
-    <SectionTwo />
+    <NavBar />
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import SectionOne from "@/components/SectionOne.vue";
-import SectionTwo from "@/components/SectionTwo.vue";
+import NavBar from "@/components/Navbar";
 
 export default {
   name: "App",
   components: {
-    SectionOne,
-    SectionTwo
+    NavBar
   }
 };
 </script>
