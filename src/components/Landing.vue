@@ -1,5 +1,5 @@
 <template>
-  <div class="practical">
+  <div class="Landing">
     <SectionOne />
     <SectionTwo />
   </div>

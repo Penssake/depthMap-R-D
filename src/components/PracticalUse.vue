@@ -1,6 +1,6 @@
 <template>
   <div class="practical">
-    <p>To be practical application portion</p>
+    <p>To be practical application portion once rotation is working</p>
   </div>
 </template>
 
@@ -11,4 +11,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.practical {
+  color: white;
+  font-size: 32px;
+}
+</style>
