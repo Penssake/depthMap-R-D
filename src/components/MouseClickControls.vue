@@ -83,7 +83,7 @@ export default {
       this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
       const spotLight = new THREE.SpotLight(0xffffff);
-      spotLight.position.set(0, 4000, 300);
+      spotLight.position.set(0, 500, 300);
 
       spotLight.castShadow = true;
 

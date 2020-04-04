@@ -95,18 +95,13 @@ export default {
         this.canvas.addEventListener("mousemove", () => {
           let x = event.clientX - window.innerWidth / 2;
           let y = event.clientY - window.innerHeight / 1.43;
-          // if (y >= 183) {
-          //   this.scene.background = new THREE.Color("#f00");
-          // } else {
-          //   this.scene.background = new THREE.Color("#000");
-          // }
           this.camera.position.y = y;
           this.camera.position.x = x;
           if (globalY === 0) {
             globalY = y;
           }
           if (y < globalY) {
-            this.camera.position.z = currentZ + (globalY - y);
+            this.camera.position.z = currentZ - (globalY - y);
           } else {
             this.camera.position.z = currentZ - (globalY + y);
           }
