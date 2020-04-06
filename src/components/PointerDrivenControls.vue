@@ -21,11 +21,18 @@ export default {
       renderer: null,
       controls: null,
       lightingOne: null,
-      lightingTwo: null
+      lightingTwo: null,
+      raycaster: null,
     };
   },
   mounted() {
     this.canvas = document.getElementById("canvasTwo");
+    this.raycaster = new THREE.Raycaster(
+      new THREE.Vector3(),
+      new THREE.Vector3(0, -1, 0),
+      0,
+      10
+    );
 
     this.createScene();
     this.createCamera();
@@ -46,13 +53,14 @@ export default {
       scene.background = new THREE.Color(0x000);
 
       const geometry = new THREE.BoxGeometry(40, 40, 40);
+
       const colorPicker = ["#8AFFAB", "#5acc7b", "#646DFF"];
       for (var i = 0; i < 300; i++) {
         let chosenIndex = Math.floor(Math.random() * colorPicker.length);
         let chosenColor = colorPicker[chosenIndex];
 
         const material = new THREE.MeshStandardMaterial({
-          color: new THREE.Color(chosenColor)
+          color: new THREE.Color(chosenColor),
         });
 
         let currentCube = new THREE.Mesh(geometry, material);
@@ -122,8 +130,8 @@ export default {
       if (this.controls) {
         this.controls.update;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>

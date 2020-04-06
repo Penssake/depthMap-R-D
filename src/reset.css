@@ -91,6 +91,13 @@ video {
   font: inherit;
   vertical-align: baseline;
 }
+
+html,
+body {
+  /*cheap fix, not a production move*/
+  overflow-x: hidden;
+  background-color: #1a1a1f;
+}
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
