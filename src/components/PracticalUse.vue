@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       canvas: null,
+      threeDObj: null,
       scene: null,
       camera: null,
       renderer: null,
@@ -33,12 +34,28 @@ export default {
   },
   mounted() {
     this.canvas = document.getElementById("practical");
+    const scene = new THREE.Scene();
+    this.scene = scene;
 
-    this.createScene();
-    this.createCamera();
-    this.createRenderer();
-    // this.createControls();
-    this.createLighting();
+    new Promise((resolve, reject) => {
+      const loader = new OBJLoader();
+      loader.setPath("./assets/models/");
+      loader.load("ladybug.obj", function(object3D) {
+        object3D.translateY(-20);
+        if (!object3D) {
+          reject("error loading your 3d object");
+        } else {
+          resolve(object3D);
+        }
+      });
+    }).then((object3D) => {
+      this.threeDObj = object3D;
+      this.createCamera();
+      this.createRenderer();
+      // this.createControls();
+      this.createLighting();
+      this.animate();
+    });
 
     window.addEventListener("resize", () => {
       // to make renderer responsive
@@ -48,22 +65,8 @@ export default {
       // needed for every update -- update matrix
       this.camera.updateProjectionMatrix();
     });
-
-    this.animate();
   },
   methods: {
-    createScene() {
-      // this in reference to vues this, does not exist inside of your model loader
-      const scene = new THREE.Scene();
-      const loader = new OBJLoader();
-      loader.setPath("./assets/models/");
-      let globalObj = loader.load("ladybug.obj", function (object3D) {
-        object3D.translateY(-20);
-        // scene.add(object3D);
-        return object3D;
-      });
-      this.scene = scene;
-    },
     createCamera() {
       // (field of view(FOV), aspect ratio, near plane, far plane)
       const camera = new THREE.PerspectiveCamera(
