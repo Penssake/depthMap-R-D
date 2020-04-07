@@ -34,28 +34,26 @@ export default {
   },
   mounted() {
     this.canvas = document.getElementById("practical");
-    const scene = new THREE.Scene();
-    this.scene = scene;
-
-    new Promise((resolve, reject) => {
-      const loader = new OBJLoader();
-      loader.setPath("./assets/models/");
-      loader.load("ladybug.obj", function(object3D) {
-        object3D.translateY(-20);
-        if (!object3D) {
-          reject("error loading your 3d object");
-        } else {
-          resolve(object3D);
-        }
-      });
-    }).then((object3D) => {
-      this.threeDObj = object3D;
-      this.createCamera();
-      this.createRenderer();
-      // this.createControls();
-      this.createLighting();
-      this.animate();
-    });
+    this.createThreeObj();
+    // new Promise((resolve, reject) => {
+    //   const loader = new OBJLoader();
+    //   loader.setPath("./assets/models/");
+    //   loader.load("ladybug.obj", function(object3D) {
+    //     object3D.translateY(-20);
+    //     if (!object3D) {
+    //       reject("error loading your 3d object");
+    //     } else {
+    //       resolve(object3D);
+    //     }
+    //   });
+    // }).then((object3D) => {
+    //   this.threeDObj = object3D;
+    //   this.createCamera();
+    //   this.createRenderer();
+    //   // this.createControls();
+    //   this.createLighting();
+    //   this.animate();
+    // });
 
     window.addEventListener("resize", () => {
       // to make renderer responsive
@@ -67,6 +65,33 @@ export default {
     });
   },
   methods: {
+    createThreeObj() {
+      new Promise((resolve, reject) => {
+        const loader = new OBJLoader();
+        loader.setPath("./assets/models/");
+        loader.load("ladybug.obj", function(object3D) {
+          object3D.translateY(-20);
+          if (!object3D) {
+            reject("error loading your 3d object");
+          } else {
+            resolve(object3D);
+          }
+        });
+      }).then((object3D) => {
+        this.threeDObj = object3D;
+        this.createScene();
+        this.createCamera();
+        this.createRenderer();
+        // this.createControls();
+        this.createLighting();
+        this.animate();
+      });
+    },
+    createScene() {
+      const scene = new THREE.Scene();
+      scene.add(this.threeDObj);
+      this.scene = scene;
+    },
     createCamera() {
       // (field of view(FOV), aspect ratio, near plane, far plane)
       const camera = new THREE.PerspectiveCamera(
