@@ -30,3 +30,5 @@ Three.js
 ### **Web workers**
 
 [**Catalina**](http://catilinejs.com/)
+
+## threejs notes

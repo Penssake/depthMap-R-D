@@ -106,37 +106,42 @@ export default {
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-      const spotLight = new THREE.SpotLight(0xffffff);
-      spotLight.position.set(0, 500, 300);
+      // const spotLight = new THREE.SpotLight(0xffffff);
+      // spotLight.position.set(0, 0, 0);
 
-      spotLight.castShadow = true;
+      // spotLight.castShadow = true;
 
-      spotLight.shadow.mapSize.width = window.innerWidth / 2;
-      spotLight.shadow.mapSize.height = window.innerHeight / 1.43;
-      this.scene.add(spotLight);
+      // spotLight.shadow.mapSize.width = window.innerWidth / 2;
+      // spotLight.shadow.mapSize.height = window.innerHeight / 1.43;
+      // this.lighting = spotLight;
+      // this.scene.add(spotLight);
+
+      // Define the lights for the scene
+      const light = new THREE.PointLight(0xffff);
+      light.position.set(0, 0, 15);
+      this.scene.add(light);
+      var lightAmb = new THREE.AmbientLight(0x000000);
+      this.lighting = light;
+      this.scene.add(lightAmb);
     },
     handleMouse(val) {
+      // var raycaster = new THREE.Raycaster();
+      var mouse = new THREE.Vector2();
       if (val === true) {
-        let center = window.innerWidth / 4;
-        let currentX = event.clientX - window.innerWidth / 2;
-        let currentY = this.threeDObj.rotation.y;
+        event.preventDefault();
+        mouse.x = (event.clientX / window.innerWidth / 2) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight / 1.43) * 2 + 1;
 
-        if (currentX > center + 10) {
-          this.threeDObj.rotation.y = currentY += 0.05;
-          // this.threeDObj.rotation.x += 0.05;
-        } else if (currentX < center + 10) {
-          this.threeDObj.rotation.y = currentY -= 0.05;
-          // this.threeDObj.rotation.x -= 0.02;
-        }
-        console.log("center", center);
-        console.log("curent", currentX);
+        // Make the sphere follow the mouse
+        var vector = new THREE.Vector3(mouse.x, mouse.y, 200);
+        vector.unproject(this.camera);
+        var dir = vector.sub(this.camera.position).normalize();
+        var distance = -this.camera.position.z / dir.z;
+        var pos = this.camera.position
+          .clone()
+          .add(dir.multiplyScalar(distance));
 
-        // mouse.x = localX / 2;
-        // mouse.y = localY / 2;
-        // raycaster.setFromCamera(mouse, this.camera);
-        // raycaster.ray.intersectPlane(plane, pointOfIntersection);
-        // console.log(pointOfIntersection);
-        // this.threeDObj.lookAt(pointOfIntersection);
+        this.lighting.position.copy(new THREE.Vector3(pos.x, pos.y, pos.z + 2));
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});

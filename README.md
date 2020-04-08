@@ -8,3 +8,5 @@
 [Dukes Mathmatics: Three.js essentials](https://services.math.duke.edu/courses/math_everywhere/assets/techRefs/Threejs%20Essentials.pdf)\
 [Robin Hawkes, Robert Nyman: Lessons learnt building ViziCities](https://hacks.mozilla.org/2014/03/lessons-learnt-building-vizicities/)\
 [Pointer Lock API](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_Lock_API) -- this is used by Threejs
+[johannes-raida](http://www.johannes-raida.de/tutorials.htm)
+[geofx](https://www.geofx.com/graphics/nehe-three-js/nehe-three-js.html)
