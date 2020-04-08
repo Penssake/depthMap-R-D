@@ -8,7 +8,6 @@
     <div
       id="practical"
       class="practical"
-      @mouseenter="handleMouse(true)"
       @mouseleave="handleMouse(false)"
     ></div>
   </div>
@@ -17,7 +16,7 @@
 <script>
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
+// import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
 
 export default {
   name: "Practical",
@@ -35,34 +34,7 @@ export default {
   mounted() {
     this.canvas = document.getElementById("practical");
     this.createThreeObj();
-    // new Promise((resolve, reject) => {
-    //   const loader = new OBJLoader();
-    //   loader.setPath("./assets/models/");
-    //   loader.load("ladybug.obj", function(object3D) {
-    //     object3D.translateY(-20);
-    //     if (!object3D) {
-    //       reject("error loading your 3d object");
-    //     } else {
-    //       resolve(object3D);
-    //     }
-    //   });
-    // }).then((object3D) => {
-    //   this.threeDObj = object3D;
-    //   this.createCamera();
-    //   this.createRenderer();
-    //   // this.createControls();
-    //   this.createLighting();
-    //   this.animate();
-    // });
-
-    window.addEventListener("resize", () => {
-      // to make renderer responsive
-      this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.43);
-      // reset the cameras aspect ratio
-      this.camera.aspect = window.innerWidth / 2 / (window.innerHeight / 1.43);
-      // needed for every update -- update matrix
-      this.camera.updateProjectionMatrix();
-    });
+    this.handleListeners();
   },
   methods: {
     createThreeObj() {
@@ -70,7 +42,7 @@ export default {
         const loader = new OBJLoader();
         loader.setPath("./assets/models/");
         loader.load("ladybug.obj", function(object3D) {
-          object3D.translateY(-20);
+          // object3D.translateY(-20);
           if (!object3D) {
             reject("error loading your 3d object");
           } else {
@@ -87,6 +59,21 @@ export default {
         this.animate();
       });
     },
+    handleListeners() {
+      window.addEventListener("resize", () => {
+        // to make renderer responsive
+        this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.43);
+        // reset the cameras aspect ratio
+        this.camera.aspect =
+          window.innerWidth / 2 / (window.innerHeight / 1.43);
+        // needed for every update -- update matrix
+        this.camera.updateProjectionMatrix();
+      });
+
+      this.canvas.addEventListener("mousemove", () => {
+        this.handleMouse(true);
+      });
+    },
     createScene() {
       const scene = new THREE.Scene();
       scene.add(this.threeDObj);
@@ -100,8 +87,11 @@ export default {
         1,
         1000
       );
-      camera.position.z = 100;
+      camera.position.set(0, 0, 200);
       this.camera = camera;
+
+      let helper = new THREE.CameraHelper(camera);
+      this.scene.add(helper);
     },
     createRenderer() {
       const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -110,14 +100,7 @@ export default {
       this.renderer = renderer;
       this.canvas.appendChild(this.renderer.domElement);
     },
-    // createControls() {
-    //   // enable orbit control
-    //   const controls = new OrbitControls(this.camera, this.renderer.domElement);
-    //   controls.enableDamping = true;
-    //   controls.campingFactor = 0.25;
-    //   controls.enableZoom = true;
-    //   this.controls = controls;
-    // },
+
     createLighting() {
       // lighting && shadows
       this.renderer.shadowMap.enabled = true;
@@ -133,34 +116,30 @@ export default {
       this.scene.add(spotLight);
     },
     handleMouse(val) {
-      let globalY = 0;
-      let currentZ = this.camera.position.z;
       if (val === true) {
-        this.controls = new PointerLockControls(this.camera, this.canvas);
-        this.controls.enableDamping = true;
-        this.controls.autoRotate = true;
-        this.canvas.addEventListener("mousemove", () => {
-          let x = event.clientX - window.innerWidth / 2;
-          let y = event.clientY - window.innerHeight / 1.43;
-          this.camera.position.y = y;
-          this.camera.position.x = x;
-          if (globalY === 0) {
-            globalY = y;
-          }
-          if (y < globalY) {
-            this.camera.position.z = currentZ - (globalY - y);
-          } else {
-            this.camera.position.z = currentZ - (globalY + y);
-          }
-          globalY = y;
-        });
+        let center = window.innerWidth / 4;
+        let currentX = event.clientX - window.innerWidth / 2;
+        let currentY = this.threeDObj.rotation.y;
+
+        if (currentX > center + 10) {
+          this.threeDObj.rotation.y = currentY += 0.05;
+          // this.threeDObj.rotation.x += 0.05;
+        } else if (currentX < center + 10) {
+          this.threeDObj.rotation.y = currentY -= 0.05;
+          // this.threeDObj.rotation.x -= 0.02;
+        }
+        console.log("center", center);
+        console.log("curent", currentX);
+
+        // mouse.x = localX / 2;
+        // mouse.y = localY / 2;
+        // raycaster.setFromCamera(mouse, this.camera);
+        // raycaster.ray.intersectPlane(plane, pointOfIntersection);
+        // console.log(pointOfIntersection);
+        // this.threeDObj.lookAt(pointOfIntersection);
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});
-
-        this.camera.position.y = 0;
-        this.camera.position.x = 0;
-        this.camera.position.z = 200;
       }
     },
     animate() {
