@@ -157,11 +157,19 @@ export default {
           .add(direction.multiplyScalar(distance));
 
         this.lighting.position.copy(
-          new THREE.Vector3(position.x, position.y + 40, position.z / 2 + 2)
+          new THREE.Vector3(position.x - 40, position.y + 40, position.z)
         );
 
+        this.threeDObj.position.copy(
+          new THREE.Vector3(
+            position.x - 40,
+            position.y + 40,
+            position.z / 2 + 2
+          )
+        );
         // this.threeDObj.rotation.y += 0.001;
       } else {
+        this.threeDObj.position.set(0, 0, 0);
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});
       }
