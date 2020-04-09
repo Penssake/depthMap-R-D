@@ -139,25 +139,28 @@ export default {
       this.scene.add(pointLightHelper);
     },
     handleMouse(val) {
-      // let  raycaster = new THREE.Raycaster();
       let mouse = new THREE.Vector2();
       if (val === true) {
         event.preventDefault();
-        mouse.x = (event.clientX / this.centerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / this.centerHeight) * 2 + 1;
+        let canvasPosition = this.renderer.domElement.getBoundingClientRect();
+
+        mouse.x = (event.clientX - canvasPosition.left) * 2 - 1;
+        mouse.y = -(event.clientY - canvasPosition.top) * 2 + 1;
 
         // light/mouse movement
         let vector = new THREE.Vector3(mouse.x, mouse.y, 0);
-        vector.unproject(this.camera);
+        // vector.unproject(this.camera);
         let direction = vector.sub(this.camera.position).normalize();
-        let distance = -this.camera.position.z / direction.z;
+        let distance = this.camera.position.z / 2.4;
         let position = this.camera.position
           .clone()
           .add(direction.multiplyScalar(distance));
 
         this.lighting.position.copy(
-          new THREE.Vector3(position.x, position.y, position.z / 2 + 2)
+          new THREE.Vector3(position.x, position.y + 40, position.z / 2 + 2)
         );
+
+        // this.threeDObj.rotation.y += 0.001;
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});
