@@ -29,9 +29,14 @@ export default {
       renderer: null,
       controls: null,
       lighting: null,
+      centerHeight: null,
+      centerWidth: null,
     };
   },
   mounted() {
+    this.centerWidth = window.innerWidth / 2;
+    this.centerHeight = window.innerHeight / 1.43;
+
     this.canvas = document.getElementById("practical");
     this.createThreeObj();
     this.handleListeners();
@@ -60,11 +65,12 @@ export default {
     },
     handleListeners() {
       window.addEventListener("resize", () => {
+        this.centerWidth = window.innerWidth / 2;
+        this.centerHeight = window.innerHeight / 1.43;
         // to make renderer responsive
-        this.renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.43);
+        this.renderer.setSize(this.centerWidth, this.centerHeight);
         // reset the cameras aspect ratio
-        this.camera.aspect =
-          window.innerWidth / 2 / (window.innerHeight / 1.43);
+        this.camera.aspect = this.centerWidth / this.centerHeight;
         // needed for every update -- update matrix
         this.camera.updateProjectionMatrix();
       });
@@ -93,7 +99,7 @@ export default {
       // (field of view(FOV), aspect ratio, near plane, far plane)
       const camera = new THREE.PerspectiveCamera(
         75,
-        window.innerWidth / 2 / (window.innerHeight / 1.43),
+        this.centerWidth / this.centerHeight,
         1,
         1000
       );
@@ -106,7 +112,7 @@ export default {
     createRenderer() {
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setClearColor("#1a1a1f");
-      renderer.setSize(window.innerWidth / 2, window.innerHeight / 1.43);
+      renderer.setSize(this.centerWidth, this.centerHeight);
       this.renderer = renderer;
       this.canvas.appendChild(this.renderer.domElement);
     },
@@ -137,8 +143,8 @@ export default {
       let mouse = new THREE.Vector2();
       if (val === true) {
         event.preventDefault();
-        mouse.x = (event.clientX / window.innerWidth / 2) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight / 1.43) * 2 + 1;
+        mouse.x = (event.clientX / this.centerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / this.centerHeight) * 2 + 1;
 
         // light/mouse movement
         let vector = new THREE.Vector3(mouse.x, mouse.y, 0);
