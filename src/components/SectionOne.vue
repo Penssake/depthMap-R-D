@@ -15,14 +15,14 @@
 import MouseClickControls from "@/components/MouseClickControls";
 export default {
   components: {
-    MouseClickControls
-  }
+    MouseClickControls,
+  },
 };
 </script>
 <style lang="scss" scoped>
 .section-content {
   height: 70vh;
-  background-color: rgb(100, 109, 255);
+  background-color: #646dff;
   color: white;
   display: flex;
   h1 {

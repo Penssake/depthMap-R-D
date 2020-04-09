@@ -42,7 +42,6 @@ export default {
         const loader = new OBJLoader();
         loader.setPath("./assets/models/");
         loader.load("ladybug.obj", function(object3D) {
-          // object3D.translateY(-20);
           if (!object3D) {
             reject("error loading your 3d object");
           } else {
@@ -78,6 +77,17 @@ export default {
       const scene = new THREE.Scene();
       scene.add(this.threeDObj);
       this.scene = scene;
+
+      let geometry = new THREE.CircleGeometry(100, 100);
+      let material = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+      let circle = new THREE.Mesh(geometry, material);
+      scene.add(circle);
+
+      let geometryTwo = new THREE.CircleGeometry(40, 100);
+      let materialTwo = new THREE.MeshBasicMaterial({ color: "#ffffff" });
+      let circleTwo = new THREE.Mesh(geometryTwo, materialTwo);
+      circleTwo.position.set(-150, 100, 0);
+      scene.add(circleTwo);
     },
     createCamera() {
       // (field of view(FOV), aspect ratio, near plane, far plane)
@@ -87,7 +97,7 @@ export default {
         1,
         1000
       );
-      camera.position.set(0, 0, 200);
+      camera.position.set(0, 0, 0);
       this.camera = camera;
 
       let helper = new THREE.CameraHelper(camera);
@@ -106,42 +116,34 @@ export default {
       this.renderer.shadowMap.enabled = true;
       this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
-      // const spotLight = new THREE.SpotLight(0xffffff);
-      // spotLight.position.set(0, 0, 0);
-
-      // spotLight.castShadow = true;
-
-      // spotLight.shadow.mapSize.width = window.innerWidth / 2;
-      // spotLight.shadow.mapSize.height = window.innerHeight / 1.43;
-      // this.lighting = spotLight;
-      // this.scene.add(spotLight);
-
       // Define the lights for the scene
       const light = new THREE.PointLight(0xffff);
       light.position.set(0, 0, 15);
       this.scene.add(light);
-      var lightAmb = new THREE.AmbientLight(0x000000);
+      let lightAmb = new THREE.AmbientLight(0x000000);
       this.lighting = light;
       this.scene.add(lightAmb);
     },
     handleMouse(val) {
-      // var raycaster = new THREE.Raycaster();
-      var mouse = new THREE.Vector2();
+      // let  raycaster = new THREE.Raycaster();
+      let mouse = new THREE.Vector2();
       if (val === true) {
         event.preventDefault();
         mouse.x = (event.clientX / window.innerWidth / 2) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight / 1.43) * 2 + 1;
 
         // Make the sphere follow the mouse
-        var vector = new THREE.Vector3(mouse.x, mouse.y, 200);
+        let vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
         vector.unproject(this.camera);
-        var dir = vector.sub(this.camera.position).normalize();
-        var distance = -this.camera.position.z / dir.z;
-        var pos = this.camera.position
+        let direction = vector.sub(this.camera.position).normalize();
+        let distance = -this.camera.position.z / direction.z;
+        let position = this.camera.position
           .clone()
-          .add(dir.multiplyScalar(distance));
+          .add(direction.multiplyScalar(distance));
 
-        this.lighting.position.copy(new THREE.Vector3(pos.x, pos.y, pos.z + 2));
+        this.lighting.position.copy(
+          new THREE.Vector3(position.x, position.y, position.z + 2)
+        );
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});
@@ -163,7 +165,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: rgb(100, 109, 255);
+  color: #646dff;
   padding-left: 8%;
   h1 {
     font-size: 64px;

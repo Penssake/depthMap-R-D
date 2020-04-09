@@ -13,15 +13,15 @@
 import PointerDrivenControls from "@/components/PointerDrivenControls";
 export default {
   components: {
-    PointerDrivenControls
-  }
+    PointerDrivenControls,
+  },
 };
 </script>
 <style lang="scss" scoped>
 .section-content {
   height: 70vh;
   background-color: #fff;
-  color: rgb(100, 109, 255);
+  color: #646dff;
   display: flex;
   h1 {
     font-size: 64px;
@@ -29,7 +29,7 @@ export default {
   p {
     font-size: 24px;
     line-height: 32px;
-    color: rgb(100, 109, 255);
+    color: #646dff;
   }
   .header-block {
     width: 50%;
