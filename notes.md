@@ -32,3 +32,20 @@ Three.js
 [**Catalina**](http://catilinejs.com/)
 
 ## threejs notes
+
+### useful
+
+There are mutiple helpers listed in the helper section of three js documentation ->
+
+```
+let helper = new THREE.CameraHelper(camera);
+this.scene.add(helper);
+
+```
+
+```
+var sphereSize = 1;
+var pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+scene.add( pointLightHelper );
+
+```

@@ -97,7 +97,7 @@ export default {
         1,
         1000
       );
-      camera.position.set(0, 0, 0);
+      camera.position.set(0, 0, 200);
       this.camera = camera;
 
       let helper = new THREE.CameraHelper(camera);
@@ -121,8 +121,16 @@ export default {
       light.position.set(0, 0, 15);
       this.scene.add(light);
       let lightAmb = new THREE.AmbientLight(0x000000);
+      // add as global to use as a point light
       this.lighting = light;
       this.scene.add(lightAmb);
+
+      var sphereSize = 1;
+      var pointLightHelper = new THREE.PointLightHelper(
+        this.lighting,
+        sphereSize
+      );
+      this.scene.add(pointLightHelper);
     },
     handleMouse(val) {
       // let  raycaster = new THREE.Raycaster();
@@ -132,8 +140,8 @@ export default {
         mouse.x = (event.clientX / window.innerWidth / 2) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight / 1.43) * 2 + 1;
 
-        // Make the sphere follow the mouse
-        let vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+        // light/mouse movement
+        let vector = new THREE.Vector3(mouse.x, mouse.y, 0);
         vector.unproject(this.camera);
         let direction = vector.sub(this.camera.position).normalize();
         let distance = -this.camera.position.z / direction.z;
@@ -142,7 +150,7 @@ export default {
           .add(direction.multiplyScalar(distance));
 
         this.lighting.position.copy(
-          new THREE.Vector3(position.x, position.y, position.z + 2)
+          new THREE.Vector3(position.x, position.y, position.z / 2 + 2)
         );
       } else {
         this.canvas.removeEventListener("mousemove", () => {});
