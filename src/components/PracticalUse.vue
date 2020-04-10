@@ -149,7 +149,6 @@ export default {
 
         // light/mouse movement
         let vector = new THREE.Vector3(mouse.x, mouse.y, 0);
-        // vector.unproject(this.camera);
         let direction = vector.sub(this.camera.position).normalize();
         let distance = this.camera.position.z / 2.4;
         let position = this.camera.position
@@ -157,17 +156,12 @@ export default {
           .add(direction.multiplyScalar(distance));
 
         this.lighting.position.copy(
-          new THREE.Vector3(position.x - 40, position.y + 40, position.z)
+          new THREE.Vector3(position.x - 40, position.y + 60, position.z)
         );
 
         this.threeDObj.position.copy(
-          new THREE.Vector3(
-            position.x - 40,
-            position.y + 40,
-            position.z / 2 + 2
-          )
+          new THREE.Vector3(position.x - 50, position.y + 60, position.z / 3)
         );
-        // this.threeDObj.rotation.y += 0.001;
       } else {
         this.threeDObj.position.set(0, 0, 0);
         this.canvas.removeEventListener("mousemove", () => {});
@@ -176,7 +170,6 @@ export default {
     },
     animate() {
       requestAnimationFrame(this.animate);
-      // this.controls.update();
       this.renderer.render(this.scene, this.camera);
     },
   },
