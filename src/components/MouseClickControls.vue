@@ -20,6 +20,7 @@ export default {
     };
   },
   mounted() {
+    THREE.Cache.enabled = true;
     this.canvas = document.getElementById("canvas");
 
     this.createScene();

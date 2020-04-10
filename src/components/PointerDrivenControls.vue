@@ -22,10 +22,12 @@ export default {
       controls: null,
       lightingOne: null,
       lightingTwo: null,
-      raycaster: null,
+      raycaster: null
     };
   },
   mounted() {
+    THREE.Cache.enabled = true;
+
     this.canvas = document.getElementById("canvasTwo");
     this.raycaster = new THREE.Raycaster(
       new THREE.Vector3(),
@@ -60,7 +62,7 @@ export default {
         let chosenColor = colorPicker[chosenIndex];
 
         const material = new THREE.MeshStandardMaterial({
-          color: new THREE.Color(chosenColor),
+          color: new THREE.Color(chosenColor)
         });
 
         let currentCube = new THREE.Mesh(geometry, material);
@@ -130,8 +132,8 @@ export default {
       if (this.controls) {
         this.controls.update;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

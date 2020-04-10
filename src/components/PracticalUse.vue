@@ -33,10 +33,12 @@ export default {
       centerWidth: null,
       mouseY: null,
       mouseX: null,
-      canvasPosition: null,
+      canvasPosition: null
     };
   },
   mounted() {
+    THREE.Cache.enabled = true;
+
     this.centerWidth = window.innerWidth / 2;
     this.centerHeight = window.innerHeight / 1.43;
 
@@ -56,8 +58,10 @@ export default {
             resolve(object3D);
           }
         });
-      }).then((object3D) => {
+      }).then(object3D => {
         this.threeDObj = object3D;
+        this.threeDObj.castShadow = true;
+        this.threeDObj.receiveShadow = true;
         this.createScene();
         this.createCamera();
         this.createRenderer();
@@ -103,12 +107,17 @@ export default {
     createCamera() {
       // (field of view(FOV), aspect ratio, near plane, far plane)
       const camera = new THREE.PerspectiveCamera(
-        75,
+        60,
         this.centerWidth / this.centerHeight,
         1,
-        1000
+        2000
       );
+
+      // come back to fog
+      // scene.background = new THREE.Color(setcolor)
+      // scene.fog = new THREE.Fog(setcolor, 2.5, 3.5);
       camera.position.set(0, 0, 200);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera = camera;
 
       let helper = new THREE.CameraHelper(camera);
@@ -118,19 +127,22 @@ export default {
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setClearColor("#1a1a1f");
       renderer.setSize(this.centerWidth, this.centerHeight);
+      renderer.shadowMap.enabled = false;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.needsUpdate = true;
       this.renderer = renderer;
       this.canvas.appendChild(this.renderer.domElement);
       this.canvasPosition = this.renderer.domElement.getBoundingClientRect();
     },
 
     createLighting() {
-      // lighting && shadows
-      this.renderer.shadowMap.enabled = true;
-      this.renderer.shadowMap.type = THREE.PCFShadowMap;
+      // lighting
 
       // Define the lights for the scene
       const light = new THREE.PointLight(0xffff);
       light.position.set(0, 0, 15);
+      light.castShadow = true;
+
       this.scene.add(light);
       let lightAmb = new THREE.AmbientLight(0x000000);
       // add as global to use as a point light
@@ -149,8 +161,8 @@ export default {
       if (val === true) {
         event.preventDefault();
 
-        mouse.x = (event.clientX - this.canvasPosition.left) * 2 - 1;
-        mouse.y = -(event.clientY - this.canvasPosition.top) * 2 + 1;
+        mouse.x = event.clientX - this.canvasPosition.left;
+        mouse.y = -(event.clientY - this.canvasPosition.top);
 
         this.mouseX = mouse.x;
         this.mouseY = mouse.y;
@@ -167,10 +179,29 @@ export default {
           new THREE.Vector3(position.x - 40, position.y + 60, position.z)
         );
 
-        // this.threeDObj.position.copy(
-        //   new THREE.Vector3(position.x - 50, position.y + 60, position.z / 3)
-        // );
+        this.camera.position.x = this.camera.position.x * 0.05;
+        this.camera.position.y = -(this.camera.position.y * 0.05);
+        // this.threeDObj.lookAt(this.scene.position);
+
+        this.threeDObj.position.copy(
+          new THREE.Vector3(position.x - 50, position.y + 60, position.z / 3)
+        );
+        this.threeDObj.lookAt(this.lighting.position);
+
+        if (this.mouseX > this.centerWidth / 2) {
+          this.threeDObj.rotation.y += this.threeDObj.rotation.y += 0.07;
+        }
+        if (this.mouseX < this.centerWidth / 2) {
+          this.threeDObj.rotation.y += this.threeDObj.rotation.y -= 0.5;
+        }
+        if (this.mouseY > this.centerHeight / 2.43) {
+          this.threeDObj.rotation.x += this.threeDObj.rotation.x += 0.05;
+        }
+        if (this.mouseY < this.centerHeight / 2.43) {
+          this.threeDObj.rotation.x += this.threeDObj.rotation.x -= 0.05;
+        }
       } else {
+        // this.camera.lookAt(this.scene.position);
         this.threeDObj.position.set(0, 0, 0);
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});
@@ -179,15 +210,8 @@ export default {
     animate() {
       requestAnimationFrame(this.animate);
       this.renderer.render(this.scene, this.camera);
-      this.render();
-    },
-    render() {
-      this.camera.position.x += (this.mouseX - this.camera.position.x) * 0.05;
-      this.camera.position.y += (-this.mouseY - this.camera.position.y) * 0.05;
-      this.camera.position.z = 200;
-      this.camera.lookAt(this.scene.position);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
