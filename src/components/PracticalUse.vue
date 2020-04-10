@@ -31,6 +31,9 @@ export default {
       lighting: null,
       centerHeight: null,
       centerWidth: null,
+      mouseY: null,
+      mouseX: null,
+      canvasPosition: null,
     };
   },
   mounted() {
@@ -67,6 +70,8 @@ export default {
       window.addEventListener("resize", () => {
         this.centerWidth = window.innerWidth / 2;
         this.centerHeight = window.innerHeight / 1.43;
+        this.canvasPosition = this.renderer.domElement.getBoundingClientRect();
+
         // to make renderer responsive
         this.renderer.setSize(this.centerWidth, this.centerHeight);
         // reset the cameras aspect ratio
@@ -115,6 +120,7 @@ export default {
       renderer.setSize(this.centerWidth, this.centerHeight);
       this.renderer = renderer;
       this.canvas.appendChild(this.renderer.domElement);
+      this.canvasPosition = this.renderer.domElement.getBoundingClientRect();
     },
 
     createLighting() {
@@ -142,10 +148,12 @@ export default {
       let mouse = new THREE.Vector2();
       if (val === true) {
         event.preventDefault();
-        let canvasPosition = this.renderer.domElement.getBoundingClientRect();
 
-        mouse.x = (event.clientX - canvasPosition.left) * 2 - 1;
-        mouse.y = -(event.clientY - canvasPosition.top) * 2 + 1;
+        mouse.x = (event.clientX - this.canvasPosition.left) * 2 - 1;
+        mouse.y = -(event.clientY - this.canvasPosition.top) * 2 + 1;
+
+        this.mouseX = mouse.x;
+        this.mouseY = mouse.y;
 
         // light/mouse movement
         let vector = new THREE.Vector3(mouse.x, mouse.y, 0);
@@ -159,9 +167,9 @@ export default {
           new THREE.Vector3(position.x - 40, position.y + 60, position.z)
         );
 
-        this.threeDObj.position.copy(
-          new THREE.Vector3(position.x - 50, position.y + 60, position.z / 3)
-        );
+        // this.threeDObj.position.copy(
+        //   new THREE.Vector3(position.x - 50, position.y + 60, position.z / 3)
+        // );
       } else {
         this.threeDObj.position.set(0, 0, 0);
         this.canvas.removeEventListener("mousemove", () => {});
@@ -171,6 +179,13 @@ export default {
     animate() {
       requestAnimationFrame(this.animate);
       this.renderer.render(this.scene, this.camera);
+      this.render();
+    },
+    render() {
+      this.camera.position.x += (this.mouseX - this.camera.position.x) * 0.05;
+      this.camera.position.y += (-this.mouseY - this.camera.position.y) * 0.05;
+      this.camera.position.z = 200;
+      this.camera.lookAt(this.scene.position);
     },
   },
 };
