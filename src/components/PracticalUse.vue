@@ -107,21 +107,18 @@ export default {
     createCamera() {
       // (field of view(FOV), aspect ratio, near plane, far plane)
       const camera = new THREE.PerspectiveCamera(
-        60,
+        75,
         this.centerWidth / this.centerHeight,
         1,
         2000
       );
 
-      // come back to fog
-      // scene.background = new THREE.Color(setcolor)
-      // scene.fog = new THREE.Fog(setcolor, 2.5, 3.5);
       camera.position.set(0, 0, 200);
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera = camera;
 
-      let helper = new THREE.CameraHelper(camera);
-      this.scene.add(helper);
+      // let helper = new THREE.CameraHelper(camera);
+      // this.scene.add(helper);
     },
     createRenderer() {
       const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -149,12 +146,12 @@ export default {
       this.lighting = light;
       this.scene.add(lightAmb);
 
-      var sphereSize = 1;
-      var pointLightHelper = new THREE.PointLightHelper(
-        this.lighting,
-        sphereSize
-      );
-      this.scene.add(pointLightHelper);
+      // var sphereSize = 1;
+      // var pointLightHelper = new THREE.PointLightHelper(
+      //   this.lighting,
+      //   sphereSize
+      // );
+      // this.scene.add(pointLightHelper);
     },
     handleMouse(val) {
       let mouse = new THREE.Vector2();
@@ -190,9 +187,11 @@ export default {
 
         if (this.mouseX > this.centerWidth / 2) {
           this.threeDObj.rotation.y += this.threeDObj.rotation.y += 0.07;
+          this.threeDObj.rotation.z += this.threeDObj.rotation.z += 0.07;
         }
         if (this.mouseX < this.centerWidth / 2) {
           this.threeDObj.rotation.y += this.threeDObj.rotation.y -= 0.5;
+          this.threeDObj.rotation.z -= this.threeDObj.rotation.z -= 0.07;
         }
         if (this.mouseY > this.centerHeight / 2.43) {
           this.threeDObj.rotation.x += this.threeDObj.rotation.x += 0.05;
@@ -203,6 +202,7 @@ export default {
       } else {
         // this.camera.lookAt(this.scene.position);
         this.threeDObj.position.set(0, 0, 0);
+        this.threeDObj.rotation.set(0, 0, 0);
         this.canvas.removeEventListener("mousemove", () => {});
         this.canvas.removeEventListener("scroll", () => {});
       }
