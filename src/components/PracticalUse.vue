@@ -226,6 +226,7 @@ export default {
     },
     handlePrev() {
       // to do add in tween transitions
+      // to do add a current/data structure
       this.circleOne.scale.set(1, 1, 1);
       this.circleOne.position.set(-150, 100, 0);
 
