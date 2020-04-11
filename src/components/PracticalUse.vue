@@ -1,25 +1,31 @@
 <template>
-  <div class="container">
-    <div class="header-block">
-      <h1>Title of application</h1>
-      <h2>Lorem ipsum</h2>
-      <p>lorem tale of a bug in a bugs life</p>
+  <div>
+    <div class="container">
+      <div class="header-block">
+        <h1>Title of application</h1>
+        <h2>Lorem ipsum</h2>
+        <p>lorem tale of a bug in a bugs life</p>
+      </div>
+      <div
+        id="practical"
+        class="practical"
+        @mouseleave="handleMouse(false)"
+      ></div>
     </div>
-    <div
-      id="practical"
-      class="practical"
-      @mouseleave="handleMouse(false)"
-    ></div>
+    <NavBar @next="handleNext" @prev="handlePrev" />
   </div>
 </template>
 
 <script>
 import * as THREE from "three";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
-// import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls.js";
+import NavBar from "@/components/Navbar";
 
 export default {
   name: "Practical",
+  components: {
+    NavBar
+  },
   data() {
     return {
       canvas: null,
@@ -33,7 +39,11 @@ export default {
       centerWidth: null,
       mouseY: null,
       mouseX: null,
-      canvasPosition: null
+      canvasPosition: null,
+      circle: null,
+      circleOne: null,
+      circleRadius: 85,
+      circleOneRadius: 45
     };
   },
   mounted() {
@@ -43,6 +53,7 @@ export default {
     this.centerHeight = window.innerHeight / 1.43;
 
     this.canvas = document.getElementById("practical");
+
     this.createThreeObj();
     this.handleListeners();
   },
@@ -74,6 +85,7 @@ export default {
       window.addEventListener("resize", () => {
         this.centerWidth = window.innerWidth / 2;
         this.centerHeight = window.innerHeight / 1.43;
+
         this.canvasPosition = this.renderer.domElement.getBoundingClientRect();
 
         // to make renderer responsive
@@ -93,16 +105,18 @@ export default {
       scene.add(this.threeDObj);
       this.scene = scene;
 
-      let geometry = new THREE.CircleGeometry(100, 100);
+      let geometry = new THREE.CircleGeometry(this.circleRadius, 100);
       let material = new THREE.MeshBasicMaterial({ color: "#ffffff" });
       let circle = new THREE.Mesh(geometry, material);
       scene.add(circle);
+      this.circle = circle;
 
-      let geometryTwo = new THREE.CircleGeometry(40, 100);
+      let geometryTwo = new THREE.CircleGeometry(this.circleOneRadius, 100);
       let materialTwo = new THREE.MeshBasicMaterial({ color: "#ffffff" });
-      let circleTwo = new THREE.Mesh(geometryTwo, materialTwo);
-      circleTwo.position.set(-150, 100, 0);
-      scene.add(circleTwo);
+      let circleOne = new THREE.Mesh(geometryTwo, materialTwo);
+      circleOne.position.set(-150, 100, 0);
+      scene.add(circleOne);
+      this.circleOne = circleOne;
     },
     createCamera() {
       // (field of view(FOV), aspect ratio, near plane, far plane)
@@ -116,9 +130,6 @@ export default {
       camera.position.set(0, 0, 200);
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera = camera;
-
-      // let helper = new THREE.CameraHelper(camera);
-      // this.scene.add(helper);
     },
     createRenderer() {
       const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -127,14 +138,13 @@ export default {
       renderer.shadowMap.enabled = false;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.shadowMap.needsUpdate = true;
+
       this.renderer = renderer;
       this.canvas.appendChild(this.renderer.domElement);
       this.canvasPosition = this.renderer.domElement.getBoundingClientRect();
     },
-
     createLighting() {
       // lighting
-
       // Define the lights for the scene
       const light = new THREE.PointLight(0xffff);
       light.position.set(0, 0, 15);
@@ -145,13 +155,6 @@ export default {
       // add as global to use as a point light
       this.lighting = light;
       this.scene.add(lightAmb);
-
-      // var sphereSize = 1;
-      // var pointLightHelper = new THREE.PointLightHelper(
-      //   this.lighting,
-      //   sphereSize
-      // );
-      // this.scene.add(pointLightHelper);
     },
     handleMouse(val) {
       let mouse = new THREE.Vector2();
@@ -178,7 +181,6 @@ export default {
 
         this.camera.position.x = this.camera.position.x * 0.05;
         this.camera.position.y = -(this.camera.position.y * 0.05);
-        // this.threeDObj.lookAt(this.scene.position);
 
         this.threeDObj.position.copy(
           new THREE.Vector3(position.x - 50, position.y + 60, position.z / 3)
@@ -187,11 +189,11 @@ export default {
 
         if (this.mouseX > this.centerWidth / 2) {
           this.threeDObj.rotation.y += this.threeDObj.rotation.y += 0.07;
-          this.threeDObj.rotation.z += this.threeDObj.rotation.z += 0.07;
+          this.threeDObj.rotation.z += this.threeDObj.rotation.z += 0.1;
         }
         if (this.mouseX < this.centerWidth / 2) {
           this.threeDObj.rotation.y += this.threeDObj.rotation.y -= 0.5;
-          this.threeDObj.rotation.z -= this.threeDObj.rotation.z -= 0.07;
+          this.threeDObj.rotation.z -= this.threeDObj.rotation.z -= 0.1;
         }
         if (this.mouseY > this.centerHeight / 2.43) {
           this.threeDObj.rotation.x += this.threeDObj.rotation.x += 0.05;
@@ -210,6 +212,28 @@ export default {
     animate() {
       requestAnimationFrame(this.animate);
       this.renderer.render(this.scene, this.camera);
+    },
+    handleNext() {
+      // to do add in tween transitions
+      this.circle.scale.set(0.55, 0.55, 0.55);
+      this.circle.position.set(150, 100, 0);
+
+      this.circleOne.scale.set(1.65, 1.65, 1.65);
+      this.circleOne.position.set(0, 0, 0);
+
+      this.threeDObj.scale.set(0.6, 0.6, 0.6);
+      this.threeDObj.position.set(150, 100, 0);
+    },
+    handlePrev() {
+      // to do add in tween transitions
+      this.circleOne.scale.set(1, 1, 1);
+      this.circleOne.position.set(-150, 100, 0);
+
+      this.circle.scale.set(1, 1, 1);
+      this.circle.position.set(0, 0, 0);
+
+      this.threeDObj.scale.set(1, 1, 1);
+      this.threeDObj.position.set(0, 0, 0);
     }
   }
 };
